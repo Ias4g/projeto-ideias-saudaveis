@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import express from 'express';
 import { prisma } from './prisma';
 import { PrismaIdeiasRepository } from './repositories/prisma/prisma-ideias-repository';
@@ -7,7 +8,11 @@ export const routes = express.Router()
 
 routes.get('/', async (req, res) => {
     const users = await prisma.ideias.findMany()
-
+    console.log(users)
+    users.map(item => {
+        const dt = format(item.createdAt, 'MM/dd/yyyy')
+        console.log(dt)
+    })
     const reversedIdeas = [...users].reverse()
     let lastIdeas = []
     for (let idea of reversedIdeas) {
