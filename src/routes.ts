@@ -6,13 +6,32 @@ import { SubmitIdeiaUseCase } from './use-cases/submit-ideia-use-case';
 
 export const routes = express.Router()
 
-routes.get('/', async (req, res) => {
+async function getUsers() {
     const users = await prisma.ideias.findMany()
-    console.log(users)
+    let newUsers = [] as any
+
     users.map(item => {
-        const dt = format(item.createdAt, 'MM/dd/yyyy')
-        console.log(dt)
+        const dt = format(item.createdAt, 'dd/MM/yyyy HH:mm:ii')
+        const result = {
+            id: item.id,
+            image: item.image,
+            title: item.title,
+            category: item.category,
+            description: item.description,
+            link: item.link,
+            createdAt: dt
+        }
+
+        newUsers.push(result)
     })
+
+    return newUsers
+}
+
+routes.get('/', async (req, res) => {
+    const users = await getUsers()
+    // console.log(t)
+
     const reversedIdeas = [...users].reverse()
     let lastIdeas = []
     for (let idea of reversedIdeas) {
@@ -25,7 +44,7 @@ routes.get('/', async (req, res) => {
 })
 
 routes.get('/ideias', async (req, res) => {
-    const users = await prisma.ideias.findMany()
+    const users = await getUsers()
 
     const reversedIdeas = [...users].reverse()
     return res.render('ideias.html', { ideas: reversedIdeas })
