@@ -1,6 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import nunjucks from 'nunjucks'
+
 import { routes } from './routes'
 
 const server = express()
@@ -9,7 +10,7 @@ const server = express()
 server.use(express.static("./src/public"))
 server.use(express.json())
 
-//Habilitando o usode req.body
+//Habilitando o uso de req.body
 server.use(express.urlencoded({ extended: true }))
 
 nunjucks.configure("./src/views", {
